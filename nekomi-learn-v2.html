@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🐱 NekoMi Learn</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --pink:#FFD6E0;--pink-deep:#F4A0C0;--pink-text:#8B3A62;
+  --yellow:#FFF3B0;--yellow-deep:#FFDD57;--yellow-text:#7A6200;
+  --mint:#C7F2E4;--mint-deep:#7DDEC0;--mint-text:#1A6B52;
+  --lavender:#E8D5FF;--lav-deep:#C4A0F0;--lav-text:#5A3080;
+  --bg:#FFFAF5;--card:#FFFFFF;--text:#3A3040;--sub:#8A7A8A;
+  --border:#F0E8F0;--shadow:rgba(200,160,200,0.18)
+}
+html,body{height:100%}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+#sidebar{width:200px;min-width:200px;background:#fff;border-right:2px solid var(--border);display:flex;flex-direction:column;padding:0 0 1rem;z-index:100;transition:transform .25s}
+.sidebar-logo{padding:1.2rem 1rem 0.5rem;display:flex;align-items:center;gap:8px}
+.logo-text{font-size:15px;font-weight:800;color:var(--pink-text)}
+.logo-sub{font-size:10px;color:var(--sub);font-weight:600}
+.nav-section{padding:0.5rem 0.8rem;margin-top:0.5rem}
+.nav-label{font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;padding:0 0.5rem;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--sub);margin-bottom:2px;transition:all .18s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--pink);color:var(--pink-text)}
+.nav-item.active{background:var(--pink);color:var(--pink-text)}
+.sidebar-cat{padding:0.8rem;margin:auto 0.8rem 0;background:linear-gradient(135deg,var(--yellow),var(--pink));border-radius:16px;text-align:center}
+.cat-svg{font-size:32px;display:block;margin-bottom:4px}
+.cat-msg{font-size:10px;font-weight:700;color:var(--pink-text)}
+
+/* MOBILE SIDEBAR OVERLAY */
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99}
+#menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:200;background:#fff;border:1.5px solid var(--border);border-radius:10px;width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;font-size:18px;box-shadow:0 2px 8px var(--shadow)}
+
+/* MAIN */
+#main{flex:1;overflow-y:auto;overflow-x:hidden}
+.page{display:none;padding:1.2rem;animation:fadeIn .22s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-title{font-size:20px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.page-sub{font-size:12px;color:var(--sub);margin-bottom:1.2rem}
+
+/* CARD */
+.card{background:#fff;border-radius:18px;padding:1.2rem;border:1.5px solid var(--border);box-shadow:0 2px 12px var(--shadow);margin-bottom:1rem}
+.card-title{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:0.8rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Nunito',sans-serif;transition:all .16s;touch-action:manipulation}
+.btn-pink{background:var(--pink);color:var(--pink-text)}.btn-pink:hover{background:var(--pink-deep);color:#fff}
+.btn-yellow{background:var(--yellow);color:var(--yellow-text)}.btn-yellow:hover{background:var(--yellow-deep)}
+.btn-mint{background:var(--mint);color:var(--mint-text)}.btn-mint:hover{background:var(--mint-deep);color:#fff}
+.btn-lav{background:var(--lavender);color:var(--lav-text)}.btn-lav:hover{background:var(--lav-deep);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:9px}
+.btn-ghost{background:none;border:1.5px solid var(--border);color:var(--sub)}.btn-ghost:hover{border-color:var(--pink-deep);color:var(--pink-text)}
+.btn-danger{background:#FFD6D6;color:#8B2020}
+
+/* INPUT */
+.input-field{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--text);background:#fff;outline:none;transition:border .16s;-webkit-appearance:none}
+.input-field:focus{border-color:var(--pink-deep)}
+textarea.input-field{resize:vertical;min-height:80px}
+
+/* TAG */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.tag-pink{background:var(--pink);color:var(--pink-text)}
+.tag-mint{background:var(--mint);color:var(--mint-text)}
+.tag-yellow{background:var(--yellow);color:var(--yellow-text)}
+.tag-lav{background:var(--lavender);color:var(--lav-text)}
+
+/* TOGGLE */
+.toggle-group{display:flex;background:var(--border);border-radius:12px;padding:3px;gap:0}
+.toggle-btn{padding:7px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:none;color:var(--sub);font-family:'Nunito',sans-serif;transition:all .16s}
+.toggle-btn.active{background:#fff;color:var(--pink-text);box-shadow:0 1px 6px var(--shadow)}
+
+/* HOME HERO */
+.home-hero{background:linear-gradient(135deg,var(--pink),var(--yellow));border-radius:22px;padding:2rem 1.5rem;text-align:center;margin-bottom:1.2rem;position:relative;overflow:hidden}
+.hero-big{font-size:clamp(18px,4vw,28px);font-weight:800;color:var(--pink-text);line-height:1.3;margin-bottom:10px}
+.hero-sub-rotating{font-size:clamp(12px,2.5vw,15px);color:var(--pink-text);opacity:.8;font-style:italic;min-height:22px;transition:opacity .4s}
+.hero-sub-rotating.fade{opacity:0}
+
+/* MODE CARDS */
+.mode-row{display:flex;gap:10px;margin-top:0.8rem;flex-wrap:wrap}
+.mode-card{flex:1;min-width:120px;padding:10px 14px;border-radius:14px;cursor:pointer;border:2px solid var(--border);background:#fff;transition:all .16s}
+.mode-card:hover,.mode-card.selected{border-color:var(--pink-deep);background:var(--pink)}
+.mode-card.selected .mode-title{color:var(--pink-text)}
+.mode-emoji{font-size:18px;margin-bottom:4px}
+.mode-title{font-size:12px;font-weight:700;color:var(--sub)}
+.mode-desc{font-size:10px;color:var(--sub);margin-top:2px}
+.quick-word{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:12px;background:var(--yellow);margin-bottom:5px}
+.quick-word-en{font-weight:700;font-size:13px;color:var(--yellow-text);min-width:80px}
+.quick-word-vi{font-size:11px;color:var(--yellow-text);opacity:.8;flex:1}
+.recent-vid{display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;background:#fff;border:1.5px solid var(--border);margin-bottom:5px;cursor:pointer}
+.recent-vid:hover{border-color:var(--pink-deep);background:var(--pink)}
+.vid-thumb{width:48px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--lavender),var(--mint));display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+
+/* PLAYER PAGE */
+.player-layout{display:flex;flex-direction:column;gap:1rem}
+.player-main{width:100%}
+
+/* Video container */
+.video-wrapper{position:relative;width:100%;background:#0d0015;border-radius:16px;overflow:hidden}
+.video-wrapper iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+#player-placeholder{width:100%;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.4);gap:10px;background:#1a0a20}
+#player-placeholder .ph-icon{font-size:40px}
+#player-placeholder p{font-size:12px;text-align:center;max-width:240px;line-height:1.5}
+
+/* Subtitle area */
+.subtitle-area{background:#1a0a20;border-radius:0 0 16px 16px;padding:10px 14px;min-height:48px}
+.sub-sentence{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.sub-word{padding:3px 7px;border-radius:7px;cursor:pointer;font-size:14px;color:#fff;font-weight:600;transition:background .12s;line-height:1.4}
+.sub-word:hover{background:rgba(255,180,200,.3)}
+.sub-word.highlight{background:rgba(255,220,100,.25)}
+.sub-label{font-size:10px;font-weight:700;color:rgba(255,200,200,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+
+/* DICT MODE – layout under video */
+.dict-below-video{padding:12px 14px;background:#1a0a20;border-radius:0 0 16px 16px}
+.dict-listen-label{font-size:11px;font-weight:700;color:rgba(255,180,200,.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.dict-hidden-sentence{color:rgba(255,255,255,.15);font-size:14px;letter-spacing:2px;font-weight:700;min-height:24px;margin-bottom:8px}
+.dict-textarea{width:100%;background:rgba(255,255,255,.08);border:1.5px dashed rgba(255,180,200,.4);border-radius:10px;color:#fff;font-size:14px;font-family:'Nunito',sans-serif;padding:9px 12px;outline:none;resize:none;margin-bottom:8px;-webkit-appearance:none}
+.dict-textarea::placeholder{color:rgba(255,255,255,.3)}
+.dict-textarea:focus{border-color:rgba(255,180,200,.8)}
+.dict-btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.dict-btn{padding:6px 12px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Nunito',sans-serif;touch-action:manipulation}
+.dbtn-check{background:var(--lav-deep);color:#fff}
+.dbtn-replay{background:rgba(255,255,255,.15);color:#fff}
+.dbtn-hint{background:rgba(255,200,50,.3);color:#fff9c4}
+.dbtn-clear{background:rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.dbtn-next{background:var(--pink-deep);color:#fff;display:none}
+.dict-result-box{font-size:12px;padding:8px 10px;border-radius:10px;font-weight:600;line-height:1.6;margin-bottom:6px;display:none;color:#fff}
+.dict-result-box.show{display:block}
+.dict-result-box.correct{background:rgba(100,220,160,.3)}
+.dict-result-box.partial{background:rgba(255,200,50,.2)}
+.dict-result-box.wrong{background:rgba(220,80,80,.25)}
+.word-diff span{display:inline-block;padding:1px 4px;border-radius:4px;margin:1px}
+.word-diff .ok{background:rgba(100,220,160,.3)}
+.word-diff .bad{background:rgba(220,80,80,.35);text-decoration:line-through}
+.word-diff .miss{background:rgba(255,200,50,.3)}
+.dict-script-area{margin-top:8px}
+.dict-script-label{font-size:10px;font-weight:700;color:rgba(255,200,200,.35);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.dict-script-sentences{max-height:100px;overflow-y:auto}
+.dict-script-sent{font-size:12px;color:rgba(255,255,255,.3);padding:3px 6px;border-radius:6px;margin-bottom:2px;cursor:pointer;transition:background .1s}
+.dict-script-sent.current{background:rgba(255,180,200,.2);color:rgba(255,255,255,.8)}
+.dict-script-sent.done{color:rgba(100,220,160,.5);text-decoration:line-through}
+
+/* Progress bar on top of video */
+.video-progress-bar{height:4px;background:rgba(255,255,255,.15);border-radius:4px 4px 0 0;overflow:hidden}
+.video-progress-fill{height:100%;background:linear-gradient(90deg,var(--pink-deep),var(--lav-deep));border-radius:4px;transition:width .4s}
+
+/* SCRIPT INPUT MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(60,30,60,.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-box{background:#fff;border-radius:22px;padding:1.5rem;max-width:500px;width:100%;box-shadow:0 8px 40px rgba(180,100,180,.2);max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--sub);margin-bottom:1rem;line-height:1.5}
+
+/* WORD POPUP */
+.word-popup{position:fixed;background:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 6px 32px rgba(180,100,180,.3);border:2px solid var(--pink);z-index:900;min-width:200px;max-width:260px;display:none}
+.wp-word{font-size:17px;font-weight:800;color:var(--pink-text)}
+.wp-pron{font-size:11px;color:var(--sub)}
+.wp-def{font-size:13px;color:var(--text);margin:6px 0}
+.wp-saved{font-size:11px;color:var(--mint-text);font-weight:700;display:none}
+
+/* LIBRARY */
+.vid-card{background:#fff;border-radius:16px;border:1.5px solid var(--border);overflow:hidden;cursor:pointer;transition:all .18s}
+.vid-card:hover{border-color:var(--pink-deep);box-shadow:0 4px 16px var(--shadow)}
+.vid-card-thumb{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--lavender),var(--mint));display:flex;align-items:center;justify-content:center;font-size:28px;position:relative}
+.vid-card-play{position:absolute;width:36px;height:36px;background:rgba(255,255,255,.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px}
+.vid-card-body{padding:8px 10px}
+.vid-card-title{font-size:12px;font-weight:700;color:var(--text)}
+.vid-card-meta{font-size:10px;color:var(--sub);margin-top:3px}
+.grid3-resp{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.8rem}
+
+/* VOCAB */
+.flashcard{width:100%;max-width:340px;margin:0 auto 1.2rem;cursor:pointer;perspective:600px}
+.fc-inner{width:100%;aspect-ratio:5/3;position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1)}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border)}
+.fc-front{background:linear-gradient(135deg,var(--pink),var(--lavender))}
+.fc-back{background:linear-gradient(135deg,var(--mint),var(--yellow));transform:rotateY(180deg)}
+.fc-word{font-size:26px;font-weight:800;color:var(--pink-text)}
+.fc-hint{font-size:11px;color:var(--sub);margin-top:6px;font-weight:600}
+.fc-vi{font-size:18px;font-weight:800;color:var(--mint-text)}
+.fc-pron{font-size:12px;color:var(--mint-text);margin-top:4px}
+.vocab-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:#fff;border:1.5px solid var(--border);margin-bottom:5px}
+.vocab-en{font-weight:700;font-size:13px;min-width:100px}
+.vocab-vi{font-size:12px;color:var(--sub);flex:1}
+.vocab-del{cursor:pointer;font-size:14px;color:var(--sub);border:none;background:none;padding:2px 5px}
+
+/* QUIZ */
+.quiz-q{font-size:14px;font-weight:700;color:var(--text);margin-bottom:1rem;padding:1rem;background:var(--yellow);border-radius:14px;text-align:center}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quiz-opt{padding:10px 12px;border-radius:12px;background:#fff;border:2px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;color:var(--text);transition:all .14s;text-align:left}
+.quiz-opt:hover:not([disabled]){border-color:var(--lav-deep);background:var(--lavender)}
+.quiz-opt.correct{background:var(--mint);border-color:var(--mint-deep);color:var(--mint-text)}
+.quiz-opt.wrong{background:#FFD6D6;border-color:#F4A0A0;color:#8B2020}
+
+/* LOG */
+.progress-pet{background:linear-gradient(135deg,var(--yellow),var(--pink));border-radius:20px;padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.pet-bar-wrap{background:rgba(255,255,255,.5);border-radius:10px;height:10px;overflow:hidden;margin-top:6px}
+.pet-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--pink-deep),var(--lav-deep));transition:width .4s}
+.stat-row{display:flex;gap:0.6rem;margin-bottom:1rem;flex-wrap:wrap}
+.stat-box{flex:1;min-width:65px;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:10px 10px;text-align:center}
+.stat-num{font-size:20px;font-weight:800;color:var(--pink-text)}
+.stat-label{font-size:10px;color:var(--sub);font-weight:600}
+.log-row{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;background:#fff;border:1.5px solid var(--border);margin-bottom:5px}
+.log-icon{font-size:20px;flex-shrink:0}
+.log-title{font-size:12px;font-weight:700}
+.log-meta{font-size:11px;color:var(--sub)}
+
+/* Streak calendar */
+.streak-days{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.streak-day{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1.5px solid var(--border);cursor:pointer;transition:all .15s}
+.streak-day.done{background:var(--pink);color:var(--pink-text);border-color:var(--pink-deep)}
+.streak-day.today{border-color:var(--lav-deep);color:var(--lav-text)}
+.streak-day.today.done{background:linear-gradient(135deg,var(--pink),var(--lavender));border-color:var(--lav-deep)}
+.checkin-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:linear-gradient(90deg,var(--pink),var(--lavender));border:none;border-radius:14px;font-size:13px;font-weight:700;color:var(--pink-text);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .18s;margin-top:10px}
+.checkin-btn:disabled{opacity:.5;cursor:not-allowed}
+.checkin-btn:not(:disabled):hover{opacity:.9;transform:scale(1.02)}
+
+/* TAB */
+.tab-bar{display:flex;gap:5px;margin-bottom:1rem;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--sub);transition:all .16s}
+.tab.active{background:var(--pink);color:var(--pink-text);border-color:var(--pink-deep)}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;right:1rem;background:#fff;border:1.5px solid var(--pink);border-radius:14px;padding:9px 14px;box-shadow:0 4px 20px var(--shadow);font-size:12px;font-weight:700;color:var(--pink-text);z-index:2000;display:none;align-items:center;gap:8px;max-width:280px}
+
+/* Translate bar */
+.translate-bar{background:#1a0a20;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.translate-label{font-size:10px;font-weight:700;color:rgba(255,200,200,.4);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.translate-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-size:12px;font-family:'Nunito',sans-serif;padding:4px 8px;outline:none;cursor:pointer}
+.translate-text{font-size:13px;color:rgba(255,200,200,.75);flex:1;line-height:1.4;min-height:18px}
+.translate-loading{font-size:11px;color:rgba(255,255,255,.3);font-style:italic}
+
+/* Player header */
+.player-top-bar{display:flex;align-items:center;gap:8px;margin-bottom:0.8rem;flex-wrap:wrap}
+
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--pink-deep);border-radius:10px}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:640px){
+  body{overflow-x:hidden;overflow-y:hidden}
+  #sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);z-index:150}
+  #sidebar.open{transform:translateX(0)}
+  #sidebar-overlay.show{display:block}
+  #menu-btn{display:flex}
+  #main{overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #main{padding-top:0}
+  .page{padding:1rem;padding-top:52px}
+  .grid2{grid-template-columns:1fr}
+  .quiz-opts{grid-template-columns:1fr}
+  .player-top-bar{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- Mobile menu button -->
+<button id="menu-btn" onclick="toggleSidebar()">☰</button>
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <span style="font-size:24px">🐱</span>
+    <div><div class="logo-text">NekoMi Learn</div><div class="logo-sub">học vui mỗi ngày ✨</div></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Menu</div>
+    <button class="nav-item active" onclick="showPage('home',this)"><span>🏠</span> Trang chủ</button>
+    <button class="nav-item" onclick="showPage('player',this)"><span>📺</span> Xem Video</button>
+    <button class="nav-item" onclick="showPage('library',this)"><span>🗂️</span> Thư viện</button>
+    <button class="nav-item" onclick="showPage('vocab',this)"><span>📚</span> Kho từ vựng</button>
+    <button class="nav-item" onclick="showPage('log',this)"><span>📈</span> Nhật ký học</button>
+  </div>
+  <div class="sidebar-cat">
+    <span class="cat-svg" id="cat-emoji">🐱</span>
+    <div class="cat-msg" id="cat-msg">Học tiếng Anh nào!</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- ══ HOME ══ -->
+<section class="page active" id="pg-home">
+  <div class="home-hero">
+    <div class="hero-big">NAY NEKO HỌC TIẾNG ANH NHA MỌI NGƯỜI 🎀</div>
+    <div class="hero-sub-rotating" id="hero-sub">chắc nay bão à nha</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📎 Dán link YouTube để bắt đầu</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input class="input-field" id="yt-link-input" placeholder="https://www.youtube.com/watch?v=..." style="flex:1;min-width:180px"/>
+      <button class="btn btn-pink" onclick="loadVideo()">Vào học! 🚀</button>
+    </div>
+    <div class="mode-row">
+      <div class="mode-card selected" id="mode-watch" onclick="selectMode('watch')">
+        <div class="mode-emoji">👀</div>
+        <div class="mode-title">Xem thường</div>
+        <div class="mode-desc">Tự do tra từ trong script</div>
+      </div>
+      <div class="mode-card" id="mode-dict" onclick="selectMode('dict')">
+        <div class="mode-emoji">✍️</div>
+        <div class="mode-title">Chép chính tả</div>
+        <div class="mode-desc">Nghe từng câu, gõ lại</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">⚡ Từ vựng vừa lưu</div>
+      <div id="home-words"><div style="color:var(--sub);font-size:12px">Chưa có từ nào~ Xem video và nhấn vào từ để lưu!</div></div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">🎬 Video gần đây</div>
+      <div id="home-recent"><div style="color:var(--sub);font-size:12px">Chưa xem video nào~</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PLAYER ══ -->
+<section class="page" id="pg-player">
+  <div class="player-top-bar">
+    <div class="page-title" style="margin-bottom:0;font-size:16px">📺 <span id="player-title-text">Đang xem video</span></div>
+    <div class="toggle-group" id="player-mode-toggle">
+      <button class="toggle-btn active" id="tmb-watch" onclick="switchPlayerMode('watch')">👀 Xem thường</button>
+      <button class="toggle-btn" id="tmb-dict" onclick="switchPlayerMode('dict')">✍️ Chép chính tả</button>
+    </div>
+    <button class="btn btn-sm btn-ghost" onclick="saveCurrentVideo()">💾 Lưu video</button>
+  </div>
+
+  <!-- Video progress bar (top of video) -->
+  <div class="video-progress-bar" id="dict-top-progress" style="display:none">
+    <div class="video-progress-fill" id="dict-top-fill" style="width:0%"></div>
+  </div>
+
+  <!-- Quick URL input always visible in player -->
+  <div id="player-url-row" style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+    <input class="input-field" id="player-yt-input" placeholder="Dán link YouTube vào đây..." style="flex:1;font-size:13px;padding:9px 12px"/>
+    <button class="btn btn-pink" style="padding:9px 14px;font-size:13px" onclick="loadVideoFromPlayer()">▶ Mở</button>
+  </div>
+
+  <!-- Video -->
+  <div class="video-wrapper" id="video-wrapper">
+    <div id="player-placeholder">
+      <div class="ph-icon">🎬</div>
+      <p>Dán link YouTube bên trên rồi nhấn <b>Mở</b> để bắt đầu~</p>
+    </div>
+    <div id="yt-player-div" style="display:none;width:100%;aspect-ratio:16/9"></div>
+  </div>
+
+  <!-- Translate bar – hiện sau khi load video -->
+  <div id="translate-bar-area" class="translate-bar" style="display:none">
+    <span class="translate-label">🌐</span>
+    <select class="translate-select" id="trans-lang-select" onchange="retranslateCurrentLine()">
+      <option value="vi">Tiếng Việt</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="ko">한국어</option>
+    </select>
+    <div class="translate-text" id="translate-text-el"><span class="translate-loading">Nhập Script để xem dịch tự động...</span></div>
+  </div>
+
+  <!-- WATCH mode subtitle -->
+  <div id="watch-subtitle-area" class="subtitle-area" style="display:none">
+    <div class="sub-label">📝 Script – Nhấn vào từ để tra nghĩa & lưu</div>
+    <div class="sub-sentence" id="sub-sentence-el"></div>
+  </div>
+
+  <!-- DICT mode – all below video -->
+  <div id="dict-below-area" class="dict-below-video" style="display:none">
+    <div class="dict-listen-label">🎧 Câu <span id="dict-sent-num-inline">1</span> / <span id="dict-total-inline">1</span> — Nghe và chép lại</div>
+    <div class="dict-hidden-sentence" id="dict-hidden-sentence">● ● ● ● ● ●</div>
+    <textarea class="dict-textarea" id="dict-input" rows="2" placeholder="Gõ những gì bạn vừa nghe được..."></textarea>
+    <div class="dict-result-box" id="dict-result-box"></div>
+    <div class="dict-btn-row">
+      <button class="dict-btn dbtn-check" onclick="checkDictation()">✔ Kiểm tra</button>
+      <button class="dict-btn dbtn-replay" onclick="replaySentence()">🔁 Nghe lại</button>
+      <button class="dict-btn dbtn-hint" id="dict-hint-btn" onclick="giveHint()">💡 Gợi ý từ</button>
+      <button class="dict-btn dbtn-clear" onclick="clearDictInput()">🗑 Xóa</button>
+      <button class="dict-btn dbtn-next" id="dict-next-btn" onclick="nextDictSentence()">Câu tiếp ➡</button>
+    </div>
+
+    <!-- Script sentences list below -->
+    <div class="dict-script-area" id="dict-script-area">
+      <div class="dict-script-label">📋 Script</div>
+      <div class="dict-script-sentences" id="dict-script-list"></div>
+    </div>
+  </div>
+
+  <!-- Add script button (always visible in player) -->
+  <div style="margin-top:0.8rem;display:flex;gap:8px;flex-wrap:wrap" id="player-action-row">
+    <button class="btn btn-sm btn-ghost" onclick="openScriptModal()">📝 Nhập Script</button>
+    <div style="font-size:12px;color:var(--sub);display:flex;align-items:center;gap:4px">
+      <span id="script-count-label">Script: chưa có</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LIBRARY ══ -->
+<section class="page" id="pg-library">
+  <div class="page-title">🗂️ Thư viện Video</div>
+  <div class="page-sub">Khám phá và lưu các video yêu thích</div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchTab('preset',this)">📦 Video có sẵn</button>
+    <button class="tab" onclick="switchTab('saved',this)">❤️ Video của tôi</button>
+  </div>
+  <div id="tab-preset"><div class="grid3-resp" id="preset-grid"></div></div>
+  <div id="tab-saved" style="display:none">
+    <div class="grid3-resp" id="saved-grid"></div>
+    <div id="saved-empty" style="display:none;text-align:center;padding:2rem;color:var(--sub)">
+      <div style="font-size:36px;margin-bottom:8px">📭</div>
+      <div style="font-weight:700;font-size:14px">Chưa có video nào được lưu</div>
+      <div style="font-size:11px;margin-top:4px">Dán link YouTube và nhấn "Lưu video" trong khi xem!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VOCAB ══ -->
+<section class="page" id="pg-vocab">
+  <div class="page-title">📚 Kho từ vựng</div>
+  <div class="page-sub">Ôn tập từ đã lưu qua flashcard và quiz</div>
+  <div class="tab-bar">
+    <button class="tab active" onclick="switchVocabTab('flash',this)">🃏 Flashcard</button>
+    <button class="tab" onclick="switchVocabTab('quiz',this)">🎮 Quiz</button>
+    <button class="tab" onclick="switchVocabTab('list',this)">📋 Danh sách</button>
+  </div>
+
+  <div id="vtab-flash">
+    <div class="flashcard" id="main-fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-word" id="fc-word">—</div><div class="fc-hint">Nhấn để xem nghĩa ✨</div></div>
+        <div class="fc-back">
+          <div class="fc-vi" id="fc-vi">—</div>
+          <div class="fc-pron" id="fc-pron"></div>
+          <button class="btn btn-sm btn-mint" style="margin-top:10px" onclick="event.stopPropagation();speakWord(document.getElementById('fc-word').textContent)">🔊 Nghe</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;align-items:center;gap:10px;margin-bottom:1rem">
+      <button class="btn btn-ghost" onclick="prevCard()">⬅ Trước</button>
+      <span style="font-size:12px;color:var(--sub)" id="fc-counter">0 / 0</span>
+      <button class="btn btn-pink" onclick="nextCard()">Tiếp ➡</button>
+    </div>
+  </div>
+
+  <div id="vtab-quiz" style="display:none">
+    <div class="card" style="max-width:460px;margin:0 auto">
+      <div id="quiz-inner">
+        <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+          <span class="tag tag-pink">🎮 Quiz</span>
+          <span style="font-size:12px;color:var(--sub)" id="quiz-num">Câu 1/5</span>
+        </div>
+        <div class="quiz-q" id="quiz-q">Nhấn "Bắt đầu" để chơi!</div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+      </div>
+      <div id="quiz-done" style="display:none;text-align:center;padding:1rem">
+        <div style="font-size:28px;font-weight:800;color:var(--pink-text);margin-bottom:1rem" id="quiz-score-text"></div>
+        <button class="btn btn-pink" onclick="startQuiz()">🔄 Chơi lại</button>
+      </div>
+      <button class="btn btn-pink" id="quiz-start-btn" onclick="startQuiz()" style="width:100%;margin-top:1rem;justify-content:center">🎮 Bắt đầu Quiz</button>
+    </div>
+  </div>
+
+  <div id="vtab-list" style="display:none">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem;flex-wrap:wrap;gap:6px">
+        <div class="card-title" style="margin:0">📋 Tất cả từ vựng</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="tag tag-mint" id="vocab-count-tag">0 từ</span>
+          <button class="btn btn-sm btn-ghost" onclick="exportVocab()">📤 Xuất</button>
+        </div>
+      </div>
+      <div id="vocab-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LOG ══ -->
+<section class="page" id="pg-log">
+  <div class="page-title">📈 Nhật ký học tập</div>
+  <div class="page-sub">Theo dõi hành trình của bạn mỗi ngày</div>
+
+  <div class="progress-pet">
+    <div style="font-size:48px;transition:transform .3s" id="pet-display">🥚</div>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:800;color:var(--pink-text)" id="pet-name">Mochi – Trứng nhỏ</div>
+      <div style="font-size:11px;color:var(--yellow-text)" id="pet-level">Level 1</div>
+      <div class="pet-bar-wrap"><div class="pet-bar" id="pet-bar" style="width:0%"></div></div>
+      <div style="display:flex;gap:3px;margin-top:5px" id="stars-row"></div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:10px;color:var(--yellow-text);font-weight:700">XP</div>
+      <div style="font-size:26px;font-weight:800;color:var(--pink-text)" id="xp-display">0</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-num" id="s-vids">0</div><div class="stat-label">Video đã xem</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-words">0</div><div class="stat-label">Từ đã lưu</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-dict">0</div><div class="stat-label">Bài dictation</div></div>
+    <div class="stat-box"><div class="stat-num" id="s-streak">🔥0</div><div class="stat-label">Ngày liên tiếp</div></div>
+  </div>
+
+  <!-- Streak check-in -->
+  <div class="card">
+    <div class="card-title">📅 Điểm danh học tập</div>
+    <div id="streak-calendar" class="streak-days"></div>
+    <button class="checkin-btn" id="checkin-btn" onclick="doCheckIn()">✅ Điểm danh hôm nay</button>
+    <div style="font-size:11px;color:var(--sub);margin-top:6px" id="streak-info-text">Chưa điểm danh hôm nay~</div>
+  </div>
+
+  <div class="card"><div class="card-title">🎬 Nhật ký xem video</div><div id="watch-log"></div></div>
+  <div class="card"><div class="card-title">✍️ Nhật ký Dictation</div><div id="dict-log"></div></div>
+</section>
+
+</main>
+
+<!-- SCRIPT INPUT MODAL -->
+<div id="script-modal" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">📝 Nhập Script / Transcript</div>
+    <div class="modal-sub">Dán nội dung phụ đề của video vào đây. Mỗi dòng hoặc câu sẽ thành 1 phần để luyện. Có thể lấy transcript từ YouTube (3 chấm → Open transcript).</div>
+    <textarea class="input-field" id="script-input" rows="7" placeholder="Dán script vào đây...&#10;Ví dụ:&#10;Good morning everyone!&#10;Today we are going to learn English together.&#10;Practice makes perfect, so don't give up!"></textarea>
+    <div style="display:flex;gap:8px;margin-top:1rem;justify-content:flex-end;flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="closeScriptModal()">Hủy</button>
+      <button class="btn btn-pink" onclick="applyScript()">✅ Áp dụng Script</button>
+    </div>
+  </div>
+</div>
+
+<!-- WORD POPUP -->
+<div id="word-popup" class="word-popup">
+  <div style="display:flex;justify-content:space-between;align-items:start">
+    <div>
+      <div class="wp-word" id="wp-word"></div>
+      <div class="wp-pron" id="wp-pron"></div>
+    </div>
+    <button onclick="closePopup()" style="border:none;background:none;cursor:pointer;color:var(--sub);font-size:16px">✕</button>
+  </div>
+  <div class="wp-def" id="wp-def"></div>
+  <div class="wp-saved" id="wp-saved">✅ Đã lưu vào kho từ vựng!</div>
+  <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap">
+    <button class="btn btn-sm btn-yellow" onclick="speakWord(document.getElementById('wp-word').textContent)">🔊 Nghe</button>
+    <button class="btn btn-sm btn-pink" id="wp-save-btn" onclick="saveWordFromPopup()">＋ Lưu từ</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span id="toast-msg"></span></div>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+const S = {
+  mode: 'watch',
+  videoId: null,
+  videoTitle: '',
+  script: [],
+  dictIndex: 0,
+  dictResults: [],
+  hintCount: 0,       // hints used for current sentence
+  vocabList: [],
+  watchLog: [],
+  dictLog: [],
+  savedVideos: [],
+  fcIndex: 0,
+  quizIndex: 0,
+  quizScore: 0,
+  xp: 0,
+  streak: 0,
+  checkInDates: [],   // array of date strings "YYYY-MM-DD"
+};
+
+// Load from localStorage
+function loadState() {
+  try {
+    const saved = localStorage.getItem('nekomi_state_v3');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      Object.assign(S, parsed);
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem('nekomi_state_v3', JSON.stringify(S)); } catch(e) {}
+}
+
+loadState();
+
+const PRESET_VIDEOS = [
+  {title:'English with Lucy – Daily Routine', emoji:'📚', tag:'Beginner'},
+  {title:'TED-Ed: How words change meaning', emoji:'🎓', tag:'Intermediate'},
+  {title:'Peppa Pig – Family Trip', emoji:'🐷', tag:'Beginner'},
+  {title:'BBC 6 Minute English', emoji:'📻', tag:'Intermediate'},
+  {title:'Crash Course English', emoji:'⚡', tag:'Advanced'},
+  {title:'Friends – Pivot Scene', emoji:'😂', tag:'Fun'},
+];
+
+const CAT = {
+  home:   {msg:'Học tiếng Anh nào! 🌟', e:'🐱'},
+  player: {msg:'Video đang chờ bạn~ 📺', e:'😸'},
+  library:{msg:'Khám phá video mới! 🗂️', e:'🐈'},
+  vocab:  {msg:'Ôn tập từ vựng nhé! 📚', e:'🐾'},
+  log:    {msg:'Bạn đang làm rất tốt! ✨', e:'😻'},
+};
+
+// Hero rotating subtitles
+const HERO_SUBS = [
+  'chắc nay bão à nha 🌧️',
+  'ko thể tin được 😳',
+  'quá là bất ngờ luôn á 😲',
+  'mong trụ được 3 ngày 🙏',
+  'hôm nay học nghiêm túc nha 😤',
+  'ai cổ vũ tao với 🥲',
+  'đột xuất học tiếng anh đây 🐱',
+];
+let heroSubIdx = 0;
+function rotateHeroSub() {
+  const el = document.getElementById('hero-sub');
+  if (!el) return;
+  el.classList.add('fade');
+  setTimeout(() => {
+    heroSubIdx = (heroSubIdx + 1) % HERO_SUBS.length;
+    el.textContent = HERO_SUBS[heroSubIdx];
+    el.classList.remove('fade');
+  }, 400);
+}
+setInterval(rotateHeroSub, 3500);
+
+// ── Dict data (offline lookup) ──
+const DICT = {
+  good:'tốt, giỏi',morning:'buổi sáng',everyone:'mọi người',
+  today:'hôm nay',we:'chúng ta',are:'là, đang',going:'sẽ đi, đang đi',
+  to:'để, đến',learn:'học',english:'tiếng Anh',together:'cùng nhau',
+  start:'bắt đầu',some:'một số',basic:'cơ bản',vocabulary:'từ vựng',
+  practice:'luyện tập',makes:'làm cho',perfect:'hoàn hảo',
+  give:'cho, tặng',up:'lên, bỏ cuộc',beautiful:'đẹp',sunshine:'ánh nắng',
+  happiness:'hạnh phúc',brings:'mang lại',every:'mỗi',day:'ngày',
+  adventure:'phiêu lưu',amazing:'tuyệt vời',wonderful:'tuyệt diệu',
+  important:'quan trọng',language:'ngôn ngữ',communication:'giao tiếp',
+  listen:'lắng nghe',speak:'nói',write:'viết',read:'đọc',
+  understand:'hiểu',remember:'nhớ',new:'mới',word:'từ',sentence:'câu',
+  let:'để, cho phép',people:'mọi người',time:'thời gian',very:'rất',much:'nhiều',
+  hello:'xin chào',world:'thế giới',love:'yêu, tình yêu',life:'cuộc sống',
+  know:'biết',think:'nghĩ',see:'nhìn thấy',come:'đến',go:'đi',
+  get:'lấy, được',make:'làm, tạo',take:'lấy, cầm',want:'muốn',
+  need:'cần',tell:'nói, kể',feel:'cảm thấy',look:'nhìn, trông',
+  put:'đặt',mean:'có nghĩa là',keep:'giữ',try:'thử',
+  work:'làm việc',help:'giúp',show:'chỉ, hiện',play:'chơi',
+  move:'di chuyển',live:'sống',believe:'tin tưởng',hold:'giữ',
+  turn:'quay, lượt',follow:'theo',stop:'dừng',create:'tạo ra',
+  find:'tìm thấy',give:'cho',bring:'mang',begin:'bắt đầu',
+  run:'chạy',walk:'đi bộ',stand:'đứng',lose:'mất, thua',
+  pay:'trả',meet:'gặp',include:'bao gồm',continue:'tiếp tục',
+  set:'đặt',learn:'học',change:'thay đổi',lead:'dẫn đầu',
+  understand:'hiểu',watch:'xem',school:'trường học',family:'gia đình',
+  friend:'bạn bè',happy:'vui, hạnh phúc',sad:'buồn',big:'to lớn',
+  small:'nhỏ',old:'già, cũ',young:'trẻ',long:'dài',short:'ngắn',
+  right:'đúng, phải',wrong:'sai',first:'đầu tiên',last:'cuối cùng',
+  own:'của riêng',same:'giống nhau',different:'khác nhau',large:'lớn',
+  little:'nhỏ, ít',next:'tiếp theo',early:'sớm',able:'có thể',
+  just:'vừa, chỉ',because:'vì, bởi vì',when:'khi',where:'ở đâu',
+  here:'ở đây',there:'ở đó',with:'với',from:'từ',about:'về',
+  than:'hơn',more:'thêm, nhiều hơn',also:'cũng',back:'lại, sau',
+  after:'sau',only:'chỉ',well:'tốt, khỏe',even:'thậm chí',
+  still:'vẫn',way:'cách, đường',this:'cái này',that:'cái đó',
+  not:'không',but:'nhưng',what:'gì',so:'vì vậy',
+  if:'nếu',or:'hoặc',how:'như thế nào',its:'của nó',
+  out:'ra ngoài',up:'lên',as:'như là',by:'bởi',
+  into:'vào trong',through:'qua',during:'trong suốt',
+  before:'trước',between:'giữa',never:'không bao giờ',always:'luôn luôn',
+  sometimes:'đôi khi',often:'thường xuyên',
+};
+
+const PRON = {
+  good:'/ɡʊd/',morning:'/ˈmɔːrnɪŋ/',everyone:'/ˈevriwʌn/',
+  today:'/təˈdeɪ/',learn:'/lɜːrn/',english:'/ˈɪŋɡlɪʃ/',
+  together:'/təˈɡeðər/',start:'/stɑːrt/',basic:'/ˈbeɪsɪk/',
+  vocabulary:'/vəˈkæbjəleri/',practice:'/ˈpræktɪs/',perfect:'/ˈpɜːrfɪkt/',
+  beautiful:'/ˈbjuːtɪfʊl/',happiness:'/ˈhæpɪnəs/',adventure:'/ədˈventʃər/',
+  amazing:'/əˈmeɪzɪŋ/',wonderful:'/ˈwʌndərfʊl/',language:'/ˈlæŋɡwɪdʒ/',
+  listen:'/ˈlɪsən/',speak:'/spiːk/',hello:'/həˈloʊ/',world:'/wɜːrld/',
+  important:'/ɪmˈpɔːrtənt/',communication:'/kəˌmjuːnɪˈkeɪʃn/',
+  understand:'/ˌʌndərˈstænd/',remember:'/rɪˈmembər/',
+};
+
+function lookupWord(word) {
+  const w = word.toLowerCase().replace(/[^a-z]/g,'');
+  const vi = DICT[w] || '(Chưa có trong từ điển)';
+  const pron = PRON[w] || '';
+  return {vi, pron};
+}
+
+// ── Free translation via MyMemory API ──
+async function translateText(text, targetLang) {
+  const langMap = {vi:'vi',en:'en',zh:'zh-CN',ko:'ko'};
+  const tl = langMap[targetLang] || 'vi';
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${tl}`;
+  try {
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.responseStatus === 200) return d.responseData.translatedText;
+    return '(Không dịch được)';
+  } catch(e) { return '(Lỗi dịch)'; }
+}
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  else document.querySelector(`[onclick="showPage('${id}',this)"]`)?.classList.add('active');
+  const c = CAT[id] || CAT.home;
+  document.getElementById('cat-msg').textContent = c.msg;
+  document.getElementById('cat-emoji').textContent = c.e;
+  if(id==='vocab') renderVocab();
+  if(id==='log') renderLog();
+  if(id==='home') renderHome();
+  if(id==='library') renderLibrary();
+  // Close mobile sidebar
+  closeSidebar();
+}
+
+function toggleSidebar() {
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('sidebar-overlay');
+  s.classList.toggle('open');
+  o.classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ══════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════
+function renderHome() {
+  const wEl = document.getElementById('home-words');
+  const rEl = document.getElementById('home-recent');
+  wEl.innerHTML = S.vocabList.length === 0
+    ? '<div style="color:var(--sub);font-size:12px">Chưa có từ nào~ Xem video và nhấn vào từ để lưu!</div>'
+    : [...S.vocabList].reverse().slice(0,5).map(w=>`
+        <div class="quick-word">
+          <span class="quick-word-en">${w.en}</span>
+          <span class="quick-word-vi">${w.vi}</span>
+        </div>`).join('');
+  rEl.innerHTML = S.watchLog.length === 0
+    ? '<div style="color:var(--sub);font-size:12px">Chưa xem video nào~</div>'
+    : S.watchLog.slice(0,3).map(v=>`
+        <div class="recent-vid" onclick="showPage('player')">
+          <div class="vid-thumb">🎬</div>
+          <div><div style="font-size:12px;font-weight:700">${v.title}</div><div style="font-size:11px;color:var(--sub)">${v.time}</div></div>
+        </div>`).join('');
+}
+
+function selectMode(m) {
+  S.mode = m;
+  document.getElementById('mode-watch').classList.toggle('selected', m==='watch');
+  document.getElementById('mode-dict').classList.toggle('selected', m==='dict');
+}
+
+function loadVideo() {
+  const url = document.getElementById('yt-link-input').value.trim();
+  if(!url) { showToast('Bạn chưa dán link YouTube nào! 🙈'); return; }
+  const vid = extractYTId(url);
+  if(!vid) { showToast('Link không hợp lệ! Thử lại nhé ❌'); return; }
+  S.videoId = vid;
+  S.videoTitle = 'Video YouTube';
+  // Sync to player input too
+  const pi = document.getElementById('player-yt-input');
+  if(pi) pi.value = url;
+  navigateToPlayer();
+}
+
+function loadVideoFromPlayer() {
+  const url = document.getElementById('player-yt-input').value.trim()
+    || document.getElementById('yt-link-input').value.trim();
+  if(!url) { showToast('Dán link YouTube vào đây nhé! 🙈'); return; }
+  const vid = extractYTId(url);
+  if(!vid) { showToast('Link không hợp lệ! Thử lại nhé ❌'); return; }
+  S.videoId = vid;
+  S.videoTitle = 'Video YouTube';
+  navigateToPlayer();
+}
+
+function extractYTId(url) {
+  const m = url.match(/[?&]v=([^&]{11})/) || url.match(/youtu\.be\/([^?]{11})/);
+  return m ? m[1] : null;
+}
+
+// ══════════════════════════════════════════
+//  YOUTUBE PLAYER
+// ══════════════════════════════════════════
+let ytPlayer = null;
+let ytReady = false;
+let pendingLoad = null;
+
+function onYouTubeIframeAPIReady() {
+  ytReady = true;
+  if(pendingLoad) { pendingLoad(); pendingLoad = null; }
+}
+
+function navigateToPlayer() {
+  document.getElementById('tmb-watch').classList.toggle('active', S.mode==='watch');
+  document.getElementById('tmb-dict').classList.toggle('active', S.mode==='dict');
+  showPage('player');
+  document.getElementById('player-title-text').textContent = S.videoTitle || 'Video YouTube';
+
+  const doLoad = () => {
+    document.getElementById('player-placeholder').style.display = 'none';
+    // Hide URL input row once video is loaded
+    const urlRow = document.getElementById('player-url-row');
+    if(urlRow) urlRow.style.display = 'none';
+    const div = document.getElementById('yt-player-div');
+    div.style.display = 'block';
+    if(ytPlayer) {
+      ytPlayer.loadVideoById(S.videoId);
+    } else {
+      ytPlayer = new YT.Player('yt-player-div', {
+        videoId: S.videoId,
+        playerVars:{rel:0, modestbranding:1, enablejsapi:1, playsinline:1},
+        events:{
+          onReady: ()=>{},
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+    applyPlayerMode();
+    // Always show translate bar when video loaded
+    document.getElementById('translate-bar-area').style.display = S.mode==='watch' ? 'flex' : 'none';
+    const already = S.watchLog.find(v=>v.title===S.videoTitle);
+    if(!already) {
+      S.watchLog.unshift({title:S.videoTitle, time:nowStr()});
+      addXP(10);
+      saveState();
+    }
+  };
+
+  if(ytReady) doLoad();
+  else pendingLoad = doLoad;
+}
+
+function onPlayerStateChange(e) {
+  // YT.PlayerState: ENDED=0, PLAYING=1, PAUSED=2
+}
+
+// ══════════════════════════════════════════
+//  SCRIPT SYSTEM
+// ══════════════════════════════════════════
+function openScriptModal() {
+  document.getElementById('script-modal').style.display = 'flex';
+}
+function closeScriptModal() {
+  document.getElementById('script-modal').style.display = 'none';
+}
+function applyScript() {
+  const raw = document.getElementById('script-input').value.trim();
+  if(!raw) { showToast('Chưa nhập script!'); return; }
+  // Clean YouTube transcript timestamps like "0:01", "1:23"
+  const cleaned = raw.replace(/^\d+:\d+\s*/gm, '').replace(/\n{2,}/g,'\n');
+  let sentences = cleaned.split(/\n+/).flatMap(line=>
+    line.split(/(?<=[.!?])\s+/).map(s=>s.trim())
+  ).filter(s=>s.length>2);
+  S.script = sentences;
+  S.dictIndex = 0;
+  S.dictResults = new Array(sentences.length).fill(null);
+  S.hintCount = 0;
+  closeScriptModal();
+  updateScriptCountLabel();
+  applyPlayerMode();
+  showToast(`✅ Đã load ${sentences.length} câu vào script!`);
+  saveState();
+}
+
+function updateScriptCountLabel() {
+  const el = document.getElementById('script-count-label');
+  if(el) el.textContent = S.script.length > 0 ? `Script: ${S.script.length} câu` : 'Script: chưa có';
+}
+
+function applyPlayerMode() {
+  const isDict = S.mode === 'dict';
+  const hasScript = S.script.length > 0;
+  const hasVideo = !!S.videoId;
+
+  // Translate bar: always show when video is loaded
+  document.getElementById('translate-bar-area').style.display = (hasVideo && !isDict) ? 'flex' : 'none';
+  document.getElementById('watch-subtitle-area').style.display = (!isDict && hasScript) ? 'block' : 'none';
+
+  // Dict mode area
+  document.getElementById('dict-below-area').style.display = (isDict && hasScript) ? 'block' : 'none';
+  document.getElementById('dict-top-progress').style.display = (isDict && hasScript) ? 'block' : 'none';
+
+  if(!isDict && hasScript) renderWatchSubtitle(0);
+  if(isDict && hasScript) renderDictSentence();
+}
+
+// ── WATCH MODE ──
+function renderWatchSubtitle(idx) {
+  const sentence = S.script[idx] || '';
+  const words = sentence.split(/\s+/);
+  document.getElementById('sub-sentence-el').innerHTML = words.map(w=>`
+    <span class="sub-word" onclick="clickSubWord(this,'${w.replace(/['"]/g,'')}')">${w}</span>
+  `).join('');
+  // Auto-translate this line
+  autoTranslateLine(sentence);
+}
+
+async function autoTranslateLine(sentence) {
+  const el = document.getElementById('translate-text-el');
+  if(!el) return;
+  const lang = document.getElementById('trans-lang-select')?.value || 'vi';
+  if(lang === 'en') { el.innerHTML = `<span style="opacity:.5">${sentence}</span>`; return; }
+  el.innerHTML = '<span class="translate-loading">Đang dịch...</span>';
+  const result = await translateText(sentence, lang);
+  el.textContent = result;
+}
+
+async function retranslateCurrentLine() {
+  const sentence = S.script[0] || '';
+  if(sentence) autoTranslateLine(sentence);
+}
+
+let currentPopupWord = '';
+function clickSubWord(el, word) {
+  currentPopupWord = word;
+  const clean = word.replace(/[^a-zA-Z]/g,'');
+  const {vi, pron} = lookupWord(clean);
+  document.getElementById('wp-word').textContent = word;
+  document.getElementById('wp-pron').textContent = pron;
+  document.getElementById('wp-def').textContent = vi;
+  const alreadySaved = S.vocabList.find(v=>v.en.toLowerCase()===clean.toLowerCase());
+  document.getElementById('wp-saved').style.display = alreadySaved ? 'block' : 'none';
+  document.getElementById('wp-save-btn').style.display = alreadySaved ? 'none' : 'inline-flex';
+  const popup = document.getElementById('word-popup');
+  popup.style.display = 'block';
+  const rect = el.getBoundingClientRect();
+  const popW = 240, popH = 150;
+  let left = rect.left;
+  let top = rect.bottom + 8;
+  if(left + popW > window.innerWidth - 10) left = window.innerWidth - popW - 10;
+  if(left < 8) left = 8;
+  if(top + popH > window.innerHeight - 10) top = rect.top - popH - 8;
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+  speakWord(clean);
+}
+
+function saveWordFromPopup() {
+  const word = document.getElementById('wp-word').textContent.replace(/[^a-zA-Z]/g,'');
+  const vi = document.getElementById('wp-def').textContent;
+  const pron = document.getElementById('wp-pron').textContent;
+  if(word && !S.vocabList.find(v=>v.en.toLowerCase()===word.toLowerCase())) {
+    S.vocabList.push({en:word, vi, pron});
+    document.getElementById('wp-saved').style.display = 'block';
+    document.getElementById('wp-save-btn').style.display = 'none';
+    addXP(5);
+    showToast(`📚 Đã lưu "${word}"!`);
+    saveState();
+  }
+}
+
+function closePopup() {
+  document.getElementById('word-popup').style.display = 'none';
+}
+
+// ── DICT MODE ──
+function renderDictSentence() {
+  const total = S.script.length;
+  const i = S.dictIndex;
+  if(i >= total) { finishDictation(); return; }
+
+  document.getElementById('dict-sent-num-inline').textContent = i+1;
+  document.getElementById('dict-total-inline').textContent = total;
+  const words = S.script[i].split(/\s+/);
+  document.getElementById('dict-hidden-sentence').textContent = words.map(()=>'●').join(' ');
+
+  const inp = document.getElementById('dict-input');
+  inp.value = '';
+  inp.readOnly = false;
+
+  document.getElementById('dict-result-box').className = 'dict-result-box';
+  document.getElementById('dict-result-box').innerHTML = '';
+  document.getElementById('dict-next-btn').style.display = 'none';
+  document.getElementById('dict-hint-btn').textContent = '💡 Gợi ý từ';
+  S.hintCount = 0;
+
+  // Update top progress
+  const done = S.dictResults.filter(r=>r!==null).length;
+  const pct = Math.round((done/total)*100);
+  document.getElementById('dict-top-fill').style.width = pct+'%';
+
+  // Render script list
+  renderDictScriptList();
+
+  // Pause video and speak sentence
+  if(ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+  setTimeout(()=>speakSentence(S.script[i]), 400);
+}
+
+function renderDictScriptList() {
+  const list = document.getElementById('dict-script-list');
+  if(!list) return;
+  list.innerHTML = S.script.map((sent, idx)=>`
+    <div class="dict-script-sent ${idx===S.dictIndex?'current':''} ${S.dictResults[idx]!==null?'done':''}" 
+         onclick="jumpToSentence(${idx})">${idx+1}. ${sent}</div>
+  `).join('');
+  // Scroll current into view
+  const cur = list.querySelector('.current');
+  if(cur) cur.scrollIntoView({block:'nearest'});
+}
+
+function jumpToSentence(idx) {
+  S.dictIndex = idx;
+  renderDictSentence();
+}
+
+function replaySentence() {
+  speakSentence(S.script[S.dictIndex]);
+}
+
+function speakSentence(text) {
+  if('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1;
+    speechSynthesis.speak(u);
+  }
+}
+
+function clearDictInput() {
+  document.getElementById('dict-input').value = '';
+  document.getElementById('dict-result-box').className = 'dict-result-box';
+  document.getElementById('dict-result-box').innerHTML = '';
+}
+
+function giveHint() {
+  const sentence = S.script[S.dictIndex] || '';
+  const words = sentence.split(/\s+/).filter(w=>w.length>0);
+  if(S.hintCount >= words.length) { showToast('Đã gợi ý hết rồi!'); return; }
+  // Show one more word hint progressively
+  const hintWords = words.slice(0, S.hintCount + 1);
+  const hidden = words.slice(S.hintCount + 1).map(()=>'●');
+  document.getElementById('dict-hidden-sentence').textContent = [...hintWords, ...hidden].join(' ');
+  S.hintCount++;
+  document.getElementById('dict-hint-btn').textContent = `💡 Gợi ý (${S.hintCount}/${words.length})`;
+  speakWord(words[S.hintCount - 1].replace(/[^a-zA-Z]/g,''));
+}
+
+function checkDictation() {
+  const userInput = document.getElementById('dict-input').value.trim();
+  if(!userInput) { showToast('Bạn chưa nhập gì! ✏️'); return; }
+  const target = S.script[S.dictIndex];
+  const targetWords = target.toLowerCase().replace(/[^a-z\s]/g,' ').trim().split(/\s+/);
+  const userWords = userInput.toLowerCase().replace(/[^a-z\s]/g,' ').trim().split(/\s+/);
+  let correct = 0;
+  const diffHtml = targetWords.map((tw,i)=>{
+    const uw = userWords[i] || '';
+    if(tw===uw) { correct++; return `<span class="ok">${tw}</span>`; }
+    if(uw) return `<span class="bad">${uw}</span><span class="miss"> [${tw}]</span>`;
+    return `<span class="miss">[${tw}]</span>`;
+  }).join(' ');
+  const pct = Math.round((correct/targetWords.length)*100);
+  S.dictResults[S.dictIndex] = {sentence:target, userInput, pct};
+
+  const rb = document.getElementById('dict-result-box');
+  rb.className = `dict-result-box show ${pct>=80?'correct':pct>=50?'partial':'wrong'}`;
+  rb.innerHTML = `
+    <div style="font-weight:700;margin-bottom:3px">${pct>=80?'🎉 Xuất sắc!':pct>=50?'😊 Khá tốt!':'🐣 Cố lên nhé!'} (${pct}%)</div>
+    <div class="word-diff">${diffHtml}</div>
+    <div style="margin-top:3px;font-size:11px;opacity:.7">Câu đúng: <i>${target}</i></div>`;
+
+  document.getElementById('dict-next-btn').style.display = 'inline-flex';
+  addXP(Math.round(pct/10));
+
+  // Show answer in hidden sentence box
+  document.getElementById('dict-hidden-sentence').textContent = target;
+
+  const done = S.dictResults.filter(r=>r!==null).length;
+  const overall = Math.round((done/S.script.length)*100);
+  document.getElementById('dict-top-fill').style.width = overall+'%';
+
+  renderDictScriptList();
+  saveState();
+}
+
+function nextDictSentence() {
+  S.dictIndex++;
+  if(S.dictIndex >= S.script.length) { finishDictation(); return; }
+  renderDictSentence();
+}
+
+function finishDictation() {
+  const done = S.dictResults.filter(r=>r!==null);
+  const avgPct = done.length ? Math.round(done.reduce((a,r)=>a+r.pct,0)/done.length) : 0;
+  S.dictLog.unshift({title: S.videoTitle||'Video', pct:avgPct, date:nowStr()});
+  addXP(20);
+  showToast(`🏆 Hoàn thành! Điểm trung bình: ${avgPct}%`);
+  document.getElementById('dict-below-area').innerHTML = `
+    <div style="text-align:center;padding:1.5rem 1rem">
+      <div style="font-size:36px;margin-bottom:8px">${avgPct>=80?'🌟':avgPct>=60?'😊':'🐣'}</div>
+      <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px">Hoàn thành!</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.6)">Điểm TB: <b style="color:var(--pink-deep)">${avgPct}%</b></div>
+      <button class="dict-btn dbtn-check" style="margin-top:1rem" onclick="S.dictIndex=0;S.dictResults=new Array(S.script.length).fill(null);applyPlayerMode()">🔄 Làm lại từ đầu</button>
+    </div>`;
+  saveState();
+}
+
+function switchPlayerMode(m) {
+  S.mode = m;
+  document.getElementById('tmb-watch').classList.toggle('active', m==='watch');
+  document.getElementById('tmb-dict').classList.toggle('active', m==='dict');
+  if(m==='dict' && S.script.length===0) {
+    showToast('Nhấn "Nhập Script" để thêm nội dung! 📝');
+  }
+  applyPlayerMode();
+}
+
+function saveCurrentVideo() {
+  if(!S.videoId) { showToast('Chưa có video đang phát!'); return; }
+  if(S.savedVideos.find(v=>v.id===S.videoId)) { showToast('Video này đã được lưu rồi! 😸'); return; }
+  S.savedVideos.push({id:S.videoId, title:S.videoTitle, emoji:'🎬', tag:'Đã lưu'});
+  showToast('💾 Đã lưu vào thư viện!');
+  addXP(5);
+  saveState();
+}
+
+// ══════════════════════════════════════════
+//  LIBRARY
+// ══════════════════════════════════════════
+function renderLibrary() {
+  document.getElementById('preset-grid').innerHTML = PRESET_VIDEOS.map(v=>`
+    <div class="vid-card" onclick="showToast('Video mẫu – dán link YouTube thật để xem nhé! 🎬')">
+      <div class="vid-card-thumb">${v.emoji}<div class="vid-card-play">▶</div></div>
+      <div class="vid-card-body">
+        <div class="vid-card-title">${v.title}</div>
+        <div class="vid-card-meta"><span class="tag tag-mint" style="font-size:9px">${v.tag}</span></div>
+      </div>
+    </div>`).join('');
+  renderSavedGrid();
+}
+
+function renderSavedGrid() {
+  const g = document.getElementById('saved-grid');
+  const e = document.getElementById('saved-empty');
+  if(S.savedVideos.length===0){g.innerHTML='';e.style.display='block';return;}
+  e.style.display = 'none';
+  g.innerHTML = S.savedVideos.map(v=>`
+    <div class="vid-card" onclick="replayVideo('${v.id}','${esc(v.title)}')">
+      <div class="vid-card-thumb">${v.emoji}<div class="vid-card-play">▶</div></div>
+      <div class="vid-card-body">
+        <div class="vid-card-title">${v.title}</div>
+        <div class="vid-card-meta"><span class="tag tag-pink" style="font-size:9px">${v.tag}</span></div>
+      </div>
+    </div>`).join('');
+}
+
+function replayVideo(id, title) {
+  S.videoId = id; S.videoTitle = title; navigateToPlayer();
+}
+
+function switchTab(t, btn) {
+  document.querySelectorAll('#pg-library .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-preset').style.display = t==='preset' ? 'block' : 'none';
+  document.getElementById('tab-saved').style.display = t==='saved' ? 'block' : 'none';
+  if(t==='saved') renderSavedGrid();
+}
+
+// ══════════════════════════════════════════
+//  VOCAB
+// ══════════════════════════════════════════
+function renderVocab() {
+  updateFC();
+  renderVocabList();
+}
+
+function updateFC() {
+  const w = S.vocabList[S.fcIndex];
+  document.getElementById('fc-word').textContent = w ? w.en : '—';
+  document.getElementById('fc-vi').textContent = w ? w.vi : '—';
+  document.getElementById('fc-pron').textContent = w ? w.pron : '';
+  document.getElementById('fc-counter').textContent = S.vocabList.length ? `${S.fcIndex+1} / ${S.vocabList.length}` : '0 / 0';
+  document.getElementById('main-fc').classList.remove('flipped');
+}
+
+function nextCard() { S.fcIndex = (S.fcIndex+1) % Math.max(S.vocabList.length,1); updateFC(); }
+function prevCard() { S.fcIndex = (S.fcIndex-1+Math.max(S.vocabList.length,1)) % Math.max(S.vocabList.length,1); updateFC(); }
+
+function renderVocabList() {
+  document.getElementById('vocab-list').innerHTML = S.vocabList.length
+    ? S.vocabList.map((w,i)=>`
+        <div class="vocab-row">
+          <span class="vocab-en">${w.en}</span>
+          <span class="vocab-vi">${w.vi}</span>
+          <button class="vocab-del" onclick="deleteWord(${i})" title="Xóa">✕</button>
+        </div>`).join('')
+    : '<div style="color:var(--sub);font-size:12px;padding:4px 0">Chưa có từ nào. Xem video và nhấn vào từ trong script!</div>';
+  document.getElementById('vocab-count-tag').textContent = `${S.vocabList.length} từ`;
+  const sWords = document.getElementById('s-words');
+  if(sWords) sWords.textContent = S.vocabList.length;
+}
+
+function deleteWord(i) {
+  S.vocabList.splice(i, 1);
+  if(S.fcIndex >= S.vocabList.length) S.fcIndex = Math.max(0, S.vocabList.length-1);
+  renderVocabList();
+  updateFC();
+  saveState();
+}
+
+function exportVocab() {
+  if(!S.vocabList.length) { showToast('Chưa có từ vựng nào!'); return; }
+  const txt = S.vocabList.map(w=>`${w.en} - ${w.vi} ${w.pron}`).join('\n');
+  const blob = new Blob([txt], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'nekomi_vocab.txt';
+  a.click();
+}
+
+function switchVocabTab(t, btn) {
+  document.querySelectorAll('#pg-vocab .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['flash','quiz','list'].forEach(id=>document.getElementById('vtab-'+id).style.display='none');
+  document.getElementById('vtab-'+t).style.display = 'block';
+  if(t==='list') renderVocabList();
+}
+
+// QUIZ
+let quizQs = [];
+function startQuiz() {
+  if(S.vocabList.length<2) { showToast('Cần ít nhất 2 từ để chơi quiz!'); return; }
+  S.quizIndex = 0; S.quizScore = 0;
+  quizQs = shuffle([...S.vocabList]).slice(0, Math.min(5, S.vocabList.length));
+  document.getElementById('quiz-inner').style.display = 'block';
+  document.getElementById('quiz-done').style.display = 'none';
+  document.getElementById('quiz-start-btn').style.display = 'none';
+  showQuizQ();
+}
+
+function showQuizQ() {
+  if(S.quizIndex >= quizQs.length) { endQuiz(); return; }
+  const q = quizQs[S.quizIndex];
+  document.getElementById('quiz-num').textContent = `Câu ${S.quizIndex+1}/${quizQs.length}`;
+  document.getElementById('quiz-q').textContent = `Nghĩa của "${q.en}" là gì?`;
+  const wrong = shuffle(S.vocabList.filter(w=>w.en!==q.en)).slice(0,3).map(w=>w.vi);
+  const opts = shuffle([q.vi, ...wrong]);
+  document.getElementById('quiz-opts').innerHTML = opts.map((o,i)=>`
+    <button class="quiz-opt" id="qopt${i}" onclick="checkQ(this,'${esc(o)}','${esc(q.vi)}')">${o}</button>`).join('');
+}
+
+function checkQ(btn, ans, correct) {
+  document.querySelectorAll('.quiz-opt').forEach(b=>{b.setAttribute('disabled','');b.onclick=null;});
+  if(ans===correct){ btn.classList.add('correct'); S.quizScore++; }
+  else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('correct');});
+  }
+  S.quizIndex++;
+  setTimeout(showQuizQ, 900);
+}
+
+function endQuiz() {
+  document.getElementById('quiz-inner').style.display = 'none';
+  document.getElementById('quiz-done').style.display = 'block';
+  const p = Math.round((S.quizScore/quizQs.length)*100);
+  document.getElementById('quiz-score-text').textContent = `${S.quizScore}/${quizQs.length} đúng! ${p>=80?'🌟 Xuất sắc!':p>=60?'😊 Tốt lắm!':'🐣 Cố lên nhé!'}`;
+  addXP(S.quizScore*8);
+  saveState();
+}
+
+// ══════════════════════════════════════════
+//  LOG & STREAK
+// ══════════════════════════════════════════
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function nowStr() {
+  return new Date().toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+}
+
+function doCheckIn() {
+  const today = todayStr();
+  if(S.checkInDates.includes(today)) {
+    showToast('Hôm nay đã điểm danh rồi! 😸');
+    return;
+  }
+  S.checkInDates.push(today);
+  // Calculate streak
+  recalcStreak();
+  addXP(15);
+  showToast('✅ Điểm danh thành công! +15 XP 🎉');
+  saveState();
+  renderLog();
+}
+
+function recalcStreak() {
+  if(!S.checkInDates.length) { S.streak = 0; return; }
+  const sorted = [...S.checkInDates].sort().reverse();
+  let streak = 0;
+  let d = new Date(todayStr());
+  for(let i=0; i<365; i++) {
+    const ds = d.toISOString().split('T')[0];
+    if(sorted.includes(ds)) {
+      streak++;
+      d.setDate(d.getDate()-1);
+    } else {
+      break;
+    }
+  }
+  S.streak = streak;
+}
+
+function renderLog() {
+  // Pet & XP
+  const filled = Math.min(Math.floor(S.xp/20),10);
+  document.getElementById('stars-row').innerHTML = Array.from({length:10},(_,i)=>`<span style="font-size:13px">${i<filled?'⭐':'☆'}</span>`).join('');
+  const stages = [
+    {max:50,e:'🥚',n:'Mochi – Trứng nhỏ',l:'Level 1'},
+    {max:150,e:'🐣',n:'Mochi – Đang nở',l:'Level 2'},
+    {max:300,e:'🐱',n:'Mochi – Mèo con',l:'Level 3'},
+    {max:Infinity,e:'😺',n:'Mochi – Mèo trưởng thành',l:'Level 4'},
+  ];
+  const st = stages.find(s=>S.xp<s.max) || stages[stages.length-1];
+  document.getElementById('pet-display').textContent = st.e;
+  document.getElementById('pet-name').textContent = st.n;
+  document.getElementById('pet-level').textContent = st.l;
+  document.getElementById('xp-display').textContent = S.xp;
+  document.getElementById('pet-bar').style.width = Math.min((S.xp%100),100)+'%';
+
+  document.getElementById('s-vids').textContent = S.watchLog.length;
+  document.getElementById('s-words').textContent = S.vocabList.length;
+  document.getElementById('s-dict').textContent = S.dictLog.length;
+  recalcStreak();
+  document.getElementById('s-streak').textContent = `🔥${S.streak}`;
+
+  // Streak calendar (last 30 days)
+  const cal = document.getElementById('streak-calendar');
+  const today = todayStr();
+  const days = [];
+  for(let i=29; i>=0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    days.push(d.toISOString().split('T')[0]);
+  }
+  cal.innerHTML = days.map(ds=>{
+    const dayNum = new Date(ds).getDate();
+    const isDone = S.checkInDates.includes(ds);
+    const isToday = ds === today;
+    return `<div class="streak-day ${isDone?'done':''} ${isToday?'today':''}" title="${ds}">${dayNum}</div>`;
+  }).join('');
+
+  // Check-in button
+  const checkinBtn = document.getElementById('checkin-btn');
+  const alreadyToday = S.checkInDates.includes(today);
+  checkinBtn.disabled = alreadyToday;
+  checkinBtn.textContent = alreadyToday ? '✅ Đã điểm danh hôm nay!' : '✅ Điểm danh hôm nay';
+  document.getElementById('streak-info-text').textContent = alreadyToday
+    ? `🔥 Chuỗi hiện tại: ${S.streak} ngày liên tiếp!`
+    : 'Nhấn để điểm danh hôm nay~';
+
+  // Logs
+  document.getElementById('watch-log').innerHTML = S.watchLog.map(v=>`
+    <div class="log-row"><div class="log-icon">🎬</div>
+    <div><div class="log-title">${v.title}</div><div class="log-meta">${v.time}</div></div>
+    <div style="margin-left:auto"><span class="tag tag-mint">Đã xem</span></div></div>`).join('')
+    || '<div style="color:var(--sub);font-size:12px;padding:4px 0">Chưa có nhật ký.</div>';
+
+  document.getElementById('dict-log').innerHTML = S.dictLog.map(d=>`
+    <div class="log-row"><div class="log-icon">✍️</div>
+    <div><div class="log-title">${d.title}</div><div class="log-meta">${d.date}</div></div>
+    <div style="margin-left:auto"><span class="tag tag-${d.pct>=70?'mint':'yellow'}">${d.pct}%</span></div></div>`).join('')
+    || '<div style="color:var(--sub);font-size:12px;padding:4px 0">Chưa có bài dictation.</div>';
+}
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+function speakWord(w) {
+  if(!w || w==='—') return;
+  if('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(w);
+    u.lang = 'en-US'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+  }
+}
+
+function addXP(n) {
+  S.xp += n;
+  const el = document.getElementById('xp-display');
+  if(el) el.textContent = S.xp;
+}
+
+function shuffle(a) { return [...a].sort(()=>Math.random()-.5); }
+
+function esc(s) {
+  return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.style.display = 'flex';
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.style.display='none', 3000);
+}
+
+document.addEventListener('click', e=>{
+  const popup = document.getElementById('word-popup');
+  if(popup && !popup.contains(e.target) && !e.target.classList.contains('sub-word'))
+    closePopup();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') { closePopup(); closeScriptModal(); }
+  if(e.key==='Enter' && document.getElementById('pg-player').classList.contains('active') && S.mode==='dict') {
+    const nb = document.getElementById('dict-next-btn');
+    if(nb && nb.style.display!=='none') nextDictSentence();
+    else checkDictation();
+  }
+});
+
+// INIT
+updateScriptCountLabel();
+renderHome();
+renderLibrary();
+renderVocab();
+renderLog();
+</script>
+</body>
+</html>
